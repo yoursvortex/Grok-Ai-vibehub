@@ -1,0 +1,16 @@
+'use client';
+import { useState } from 'react';
+
+export default function Home() {
+  const [posts, setPosts] = useState([]);
+
+  // Fetch posts from backend
+  // Add post creation, likes, real-time with socket.io-client
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <h1 className="text-4xl text-center py-10">VibeHub</h1>
+      {/* Posts list, create post form etc. with Tailwind */}
+    </div>
+  );
+}
