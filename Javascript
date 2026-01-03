@@ -1,0 +1,30 @@
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server); // Real-time Socket.io
+
+const prisma = new PrismaClient();
+
+app.use(express.json());
+
+// Simple Auth Route Example
+app.post('/api/register', async (req, res) => {
+  // Add bcrypt hashing etc.
+  const user = await prisma.user.create({ data: req.body });
+  res.json(user);
+});
+
+// Real-time example
+io.on('connection', (socket) => {
+  console.log('User connected');
+  socket.on('new-post', (post) => {
+    io.emit('new-post', post); // Broadcast to all
+  });
+});
+
+server.listen(5000, () => console.log('Backend running on 5000'));
