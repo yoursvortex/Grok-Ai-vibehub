@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String?
+  name      String
+  bio       String?
+  avatar    String?
+  isPremium Boolean  @default(false)
+  posts     Post[]
+  likes     Like[]
+  comments  Comment[]
+  followers Follow[] @relation("following")
+  following Follow[] @relation("followers")
+}
+
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  images    String[]
+  videos    String[]
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @db.ObjectId
+  likes     Like[]
+  comments  Comment[]
+}
+
+model Like {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+}
+
+// Add more models for Comment, Follow, Notification etc.
